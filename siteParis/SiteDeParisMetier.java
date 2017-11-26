@@ -346,6 +346,7 @@ public class SiteDeParisMetier {
 		}
 		//if (c3==0) throw new CompetitionException();
 
+		
 		if(valeurcorrecte ==0){
 			for(int i = 0; i< taille; i++){
 
