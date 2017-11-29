@@ -81,10 +81,13 @@ public class SiteDeParisMetier {
 	 *
 	 * @return le mot de passe (déterminé par le site) du nouveau joueur inscrit.
 	 */
-	public String inscrireJoueur(String nom, String prenom, String pseudo, String passwordGestionnaire) throws MetierException, JoueurExistantException, JoueurException {
+	public String inscrireJoueur(String nom, String prenom, String pseudo,
+                                 String passwordGestionnaire) throws MetierException,
+                                    JoueurExistantException, JoueurException {
 
 		validitePasswordGestionnaire(passwordGestionnaire);
-		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire)) throw new MetierException();
+		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire))
+		    throw new MetierException();
 
 
 		Joueur j=new Joueur(nom,prenom, pseudo,passwordGestionnaire);
@@ -93,8 +96,12 @@ public class SiteDeParisMetier {
 
 		for(int i=0;i<joueurs.size();i=i+1){
 
-			if(joueurs.get(i).getNom().equals(j.getNom()) && joueurs.get(i).getPrenom().equals(j.getPrenom()) ) throw new JoueurExistantException();
-			if(joueurs.get(i).getPseudo().equals(j.getPseudo()) )  throw new JoueurExistantException();
+			if(joueurs.get(i).getNom().equals(j.getNom()) &&
+                    joueurs.get(i).getPrenom().equals(j.getPrenom()) )
+			    throw new JoueurExistantException();
+
+			if(joueurs.get(i).getPseudo().equals(j.getPseudo()) )
+			    throw new JoueurExistantException();
 
 		}
 
@@ -111,7 +118,7 @@ public class SiteDeParisMetier {
 			password=password+arraypassstr[i];
 
 		}
-		//System.out.println(password);
+
 
 
 		j.setPasswordJouer(password);
@@ -139,43 +146,48 @@ public class SiteDeParisMetier {
 	 * @return le nombre de jetons à rembourser  au joueur qui vient d'être désinscrit.
 	 *
 	 */
-	public long desinscrireJoueur(String nom, String prenom, String pseudo, String passwordGestionnaire) throws MetierException, JoueurInexistantException, JoueurException {
+	public long desinscrireJoueur(String nom, String prenom, String pseudo,
+                                  String passwordGestionnaire) throws MetierException,
+                                    JoueurInexistantException, JoueurException {
 
 
 
 		validitePasswordGestionnaire(passwordGestionnaire);
-		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire)) throw new MetierException();
+		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire))
+		    throw new MetierException();
 
 		validiteNomJoueur(nom);
 		validitePrenomJoueur(prenom);
 		validitePseudoJoueur(pseudo);
 
 		int var;
-		int c=0;
+		int check=0;
 
-		int i1=0;
-		int i2=0;
-		int joueurTrue=0;
+		int i1;
+		int i2;
+		int check1=0;
 
 		for(i1=0;i1<competitions.size();i1++){
 			int taille=competitions.get(i1).getParis().size();
 			for(i2=0;i2<taille;i2++){
-				if(pseudo.equals(competitions.get(i1).getParis().get(i2).getJoueurReference().getPseudo())){
+				if(pseudo.equals(competitions.get(i1).getParis().
+                        get(i2).getJoueurReference().getPseudo())){
 
-						joueurTrue=1;
+						check1=1;
 						break;
 				}
 
 			}
 		}
 
-		if(joueurTrue==1) throw new JoueurException();
+		if(check1==1) throw new JoueurException();
 
 		for(int i=0;i<joueurs.size();i=i+1){
 
-			if(joueurs.get(i).getPseudo().equals(pseudo) && joueurs.get(i).getNom().equals(nom) && joueurs.get(i).getPrenom().equals(prenom)){
+			if(joueurs.get(i).getPseudo().equals(pseudo) && joueurs.get(i).getNom().equals(nom)
+                    && joueurs.get(i).getPrenom().equals(prenom)){
 
-				c=1;
+				check=1;
 				var=i;
 				joueurs.remove(var);
 				break;
@@ -185,11 +197,7 @@ public class SiteDeParisMetier {
 
 
 
-		if(c==0) throw new JoueurInexistantException();
-
-
-
-
+		if(check==0) throw new JoueurInexistantException();
 
 		return 0;
 	}
@@ -215,29 +223,32 @@ public class SiteDeParisMetier {
 	 * si deux compétiteurs ont le même nom, si la date de clôture
 	 * n'est pas instanciée ou est dépassée.
 	 */
-	public void ajouterCompetition(String competition, DateFrancaise dateCloture, String[] competiteurs, String passwordGestionnaire) throws MetierException, CompetitionExistanteException, CompetitionException  {
-
-
+	public void ajouterCompetition(String competition, DateFrancaise dateCloture,
+                                   String[] competiteurs, String passwordGestionnaire)
+                                    throws MetierException, CompetitionExistanteException,
+                                        CompetitionException  {
 
 		validitePasswordGestionnaire(passwordGestionnaire);
-		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire)) throw new MetierException();
+		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire))
+			throw new MetierException();
 
 
 		if (competiteurs==null) throw new MetierException();
 
 
-		int v = competiteurs.length;
-		if (v==1)  throw new CompetitionException();
+		int taillecomp = competiteurs.length;
+		if (taillecomp==1)  throw new CompetitionException();
 
 
 
-		Competition comp =new Competition(competition,dateCloture,competiteurs, v);
+		Competition comp =new Competition(competition,dateCloture,competiteurs, taillecomp);
 
 
-		for(int i=0;i<competitions.size();i=i+1){
-			if(competitions.get(i).getCompetition().equals(competition)) throw new CompetitionExistanteException();
+        for (Competition competition1 : competitions) {
+            if (competition1.getCompetition().equals(competition))
+                throw new CompetitionExistanteException();
 
-		}
+        }
 
 
 
@@ -284,13 +295,20 @@ public class SiteDeParisMetier {
 	 * si la date de clôture de la compétition est dans le futur.
 	 *
 	 */
-	public void solderVainqueur(String competition, String vainqueur, String passwordGestionnaire) throws MetierException,  CompetitionInexistanteException, CompetitionException, JoueurException, JoueurInexistantException  {
+	public void solderVainqueur(String competition, String vainqueur,
+                                String passwordGestionnaire) throws MetierException,
+                                CompetitionInexistanteException, CompetitionException,
+                                JoueurException, JoueurInexistantException  {
 
 		validitePasswordGestionnaire(passwordGestionnaire);
-		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire)) throw new MetierException();
+		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire))
+		    throw new MetierException();
+
+		validiteCompetition(competition);
+		validiteCompetiteur(vainqueur);
 
 
-		int c1 =0;
+		int check1 =0;
 		int var1=0; //var1 donne la position de l'objet competition de la linkedList competition
 
 		for(int i=0;i<competitions.size();i=i+1){
@@ -299,7 +317,7 @@ public class SiteDeParisMetier {
 			if(competitions.get(i).getCompetition().equals(competition)){
 
 
-				c1 =1;
+				check1 =1;
 				var1=i;
 				break;
 
@@ -307,52 +325,66 @@ public class SiteDeParisMetier {
 
 		}
 
+        //si la competition n'existe pas
+		if(check1 ==0) throw new CompetitionInexistanteException();
 
-		if(c1 ==0) throw new CompetitionInexistanteException();//si la competition n'existe pas
 
-		if(competitions.get(var1).getDateCloture().estDansLePasse()==false) throw new CompetitionException();//dateDeCloture incorrecte
+		if(!competitions.get(var1).getDateCloture().estDansLePasse())
+		    throw new CompetitionException();//dateDeCloture incorrecte
 
-		int taille = competitions.get(var1).getParis().size(); //nombre de paris pour verifier
+        //nombre de paris pour verifier
+		int taille = competitions.get(var1).getParis().size();
 
 		//verifier valeur total des paris faites pour la competition
 		long total=0;
 		for(int i1 = 0; i1< taille; i1++){
-			total=total+competitions.get(var1).getParis().get(i1).getMiseEnJetons();//somme de tout l'argent
+            //somme de tout l'argent
+			total=total+competitions.get(var1).getParis().get(i1).getMiseEnJetons();
 		}
 
-		int taille2 = competitions.get(var1).getCompetiteurs().size();//nombre de competiteurs dans la competition
-		int c4 =0;
+        //nombre de competiteurs dans la competition
+		int taille2 = competitions.get(var1).getCompetiteurs().size();
+		int check2 =0;
 
 		for(int i2 = 0; i2< taille2; i2=i2+1){
 
 			if(competitions.get(var1).getCompetiteurs().get(i2).getNom().equals(vainqueur)){
-				c4 =1;
+				check2 =1;
 				break;
 			}
 		}
 
+        //verifier existance du competiteur
+		if(check2 ==0) throw new CompetitionException();
 
-		if(c4 ==0) throw new CompetitionException(); //esse if ve se na linked list de competidores existe esse time
+        //sauvegarder la valeur correcte
+		long valeurcorrecte =0;
+		int check3=0;
 
-		long valeurcorrecte =0; //sauver la valeur correcte
-		int c3=0;
-
-		//boucle pour calculer l'argent du vainqueur
+		//boucle pour calculer l'argent du joueur avec le bon pari
 		for(int i3 = 0; i3< taille; i3=i3+1){
-			if(competitions.get(var1).getParis().get(i3).getCompetiteurReference().getNom().equals(vainqueur)){//ve se a aposta esta certa
-				valeurcorrecte = valeurcorrecte +competitions.get(var1).getParis().get(i3).getMiseEnJetons();
-				c3=1;
+            //verifier le pari
+			if(competitions.get(var1).getParis().get(i3).getCompetiteurReference().
+                    getNom().equals(vainqueur)){
+				valeurcorrecte = valeurcorrecte +competitions.get(var1).getParis().
+                        get(i3).getMiseEnJetons();
+				check3=1;
 			}
 		}
-		//if (c3==0) throw new CompetitionException();
 
-		
-		if(valeurcorrecte ==0){
+
+		if(check3 ==0){
 			for(int i = 0; i< taille; i++){
 
-				String nom=competitions.get(var1).getParis().get(i).getJoueurReference().getNom();
-				String prenom=competitions.get(var1).getParis().get(i).getJoueurReference().getPrenom();
-				String pseudo=competitions.get(var1).getParis().get(i).getJoueurReference().getPseudo();
+				String nom=competitions.get(var1).getParis().get(i).
+                        getJoueurReference().getNom();
+
+				String prenom=competitions.get(var1).getParis().get(i).
+                        getJoueurReference().getPrenom();
+
+				String pseudo=competitions.get(var1).getParis().get(i).
+                        getJoueurReference().getPseudo();
+
 				long MiseEnJeton=competitions.get(var1).getParis().get(i).getMiseEnJetons();
 
 
@@ -371,8 +403,11 @@ public class SiteDeParisMetier {
 		float crediter=0;
 		float MiseEnJeton;
 		for(int i = 0; i< taille; i++){
-			if(competitions.get(var1).getParis().get(i).getCompetiteurReference().getNom().equals(vainqueur)){//ve se a aposta esta certa
-				//debiter les autres
+            //verifier si le pari est correct
+			if(competitions.get(var1).getParis().get(i).getCompetiteurReference().getNom().
+                    equals(vainqueur)){
+
+			    //debiter les autres
 
 				String nom=competitions.get(var1).getParis().get(i).getJoueurReference().getNom();
 				String prenom=competitions.get(var1).getParis().get(i).getJoueurReference().getPrenom();
@@ -415,10 +450,13 @@ public class SiteDeParisMetier {
 	 * si <code>nom</code>, <code>prenom</code>,  <code>pseudo</code> sont invalides.
 	 * @throws JoueurInexistantException   levée si il n'y a pas de joueur  avec les mêmes nom,  prénom et pseudo.
 	 */
-	public void crediterJoueur(String nom, String prenom, String pseudo, long sommeEnJetons, String passwordGestionnaire) throws MetierException, JoueurException, JoueurInexistantException {
+	public void crediterJoueur(String nom, String prenom, String pseudo, long sommeEnJetons,
+                               String passwordGestionnaire) throws MetierException,
+                                JoueurException, JoueurInexistantException {
 
 		validitePasswordGestionnaire(passwordGestionnaire);
-		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire)) throw new MetierException();
+		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire))
+		    throw new MetierException();
 
 		validiteNomJoueur(nom);
 		validitePrenomJoueur(prenom);
@@ -426,20 +464,21 @@ public class SiteDeParisMetier {
 
 		if(sommeEnJetons<0) throw new MetierException();
 
-		int c1=0;
+		int check1=0;
 		int var1=0;
 		for(int i=0;i<joueurs.size();i=i+1){
 
-			if(joueurs.get(i).getPseudo().equals(pseudo) && joueurs.get(i).getNom().equals(nom) && joueurs.get(i).getPrenom().equals(prenom)){
+			if(joueurs.get(i).getPseudo().equals(pseudo) && joueurs.get(i).getNom().equals(nom)
+                    && joueurs.get(i).getPrenom().equals(prenom)){
 
-				c1=1;
+				check1=1;
 				var1=i;
 
 			}
 
 		}
 
-		if(c1==0) throw new JoueurInexistantException();
+		if(check1==0) throw new JoueurInexistantException();
 
 
 		joueurs.get(var1).setSommeEnJetons(joueurs.get(var1).getSommeEnJetons()+sommeEnJetons);
@@ -471,10 +510,13 @@ public class SiteDeParisMetier {
 	 *
 	 */
 
-	public void debiterJoueur(String nom, String prenom, String pseudo, long sommeEnJetons, String passwordGestionnaire) throws  MetierException, JoueurInexistantException, JoueurException {
+	public void debiterJoueur(String nom, String prenom, String pseudo, long sommeEnJetons,
+                              String passwordGestionnaire) throws  MetierException,
+                                JoueurInexistantException, JoueurException {
 
 		validitePasswordGestionnaire(passwordGestionnaire);
-		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire)) throw new MetierException();
+		if(!leGestionnaire.getPasswordGestionnaire().equals(passwordGestionnaire))
+		    throw new MetierException();
 
 		validiteNomJoueur(nom);
 		validitePrenomJoueur(prenom);
@@ -482,20 +524,21 @@ public class SiteDeParisMetier {
 
 		if(sommeEnJetons<0) throw new MetierException();
 
-		int c2 =0;
+		int check2 =0;
 		int var2=0;
 		for(int i=0;i<joueurs.size();i=i+1){
 
-			if(joueurs.get(i).getPseudo().equals(pseudo) && joueurs.get(i).getNom().equals(nom) && joueurs.get(i).getPrenom().equals(prenom)){
+			if(joueurs.get(i).getPseudo().equals(pseudo) && joueurs.get(i).getNom().equals(nom)
+                    && joueurs.get(i).getPrenom().equals(prenom)){
 
-				c2 =1;
+				check2 =1;
 				var2=i;
 
 			}
 
 		}
 
-		if(c2 ==0) throw new JoueurInexistantException();
+		if(check2 ==0) throw new JoueurInexistantException();
 
 
 
@@ -529,7 +572,8 @@ public class SiteDeParisMetier {
 	 *  <li>       le total de jetons engagés dans ses mises en cours. </li>
 	 *  </ul>
 	 */
-	public LinkedList <LinkedList <String>> consulterJoueurs(String passwordGestionnaire) throws MetierException {
+	public LinkedList <LinkedList <String>> consulterJoueurs(String passwordGestionnaire)
+            throws MetierException {
 
 		//valider  password gestionnaire
 		validitePasswordGestionnaire(passwordGestionnaire);
@@ -628,63 +672,59 @@ public class SiteDeParisMetier {
 
 		if (miseEnJetons<=0) throw new MetierException();
 
-		int c1=0;
+		int check1=0;
 		int var1=0; //var1 donne la position de l'objet joueur de la linkedList joueurs
 		for(int i=0;i<joueurs.size();i=i+1){
 
 			if(joueurs.get(i).getPseudo().equals(pseudo)){
 
-				c1=1;
+				check1=1;
 				var1=i;
 
-				//////////////////////////////////////
-				//String nom=joueurs.get(i).getNom();
-				//String prenom=joueurs.get(i).getPrenom();
-				//////////////////////////////////////
 			}
 
 		}
 
-		if (c1==0) throw new JoueurInexistantException();
+		if (check1==0) throw new JoueurInexistantException();
 
 
 
 
 
 
-		int c3=0;
+		int check2=0;
 		int var3=0; //var3 donne la position de l'objet joueur de la linkedList competition
 
 		for(int i=0;i<competitions.size();i=i+1){
 
 			if(competitions.get(i).getCompetition().equals(competition)){
 
-				c3=1;
+				check2=1;
 				var3=i;
 
 			}
 
 		}
 
-		if(c3==0) throw new CompetitionInexistanteException();
+		if(check2==0) throw new CompetitionInexistanteException();
 
 		if (competitions.get(var3).getDateCloture().estDansLePasse()==true) throw new CompetitionException();
 
 
-		int c2=0;
+		int check3=0;
 		int var2=0; ////var3 donne la position de l'objet joueur de la linkedList competiteurs sauvegardé dans competiition
 		for(int i=0;i<competitions.get(var3).getCompetiteurs().size();i=i+1){
 
 			if(competitions.get(var3).getCompetiteurs().get(i).getNom().equals(vainqueurEnvisage)){
 
-				c2=1;
+				check3=1;
 				var2=i;
 
 			}
 
 		}
 
-		if(c2==0) throw new CompetitionException();
+		if(check3==0) throw new CompetitionException();
 
 
 
@@ -698,14 +738,15 @@ public class SiteDeParisMetier {
 
 		if (joueurs.get(var1).getSommeEnJetons()<miseEnJetons) throw new JoueurException();
 
-		Pari pari= new Pari(miseEnJetons,joueurs.get(var1) ,competitions.get(var3).getCompetiteurs().get(var2) );
+		Pari pari= new Pari(miseEnJetons,joueurs.get(var1) ,competitions.get(var3).
+                getCompetiteurs().get(var2) );
 
 
 		competitions.get(var3).getParis().add(pari);
 
 		joueurs.get(var1).setSommeEnJetons(joueurs.get(var1).getSommeEnJetons()-miseEnJetons);
 
-		//System.out.println(" "+joueurs.get(var1).getPseudo()+" apostou "+ miseEnJetons+" na competição" +competitions.get(var3).getCompetition());
+
 
 
 	}
@@ -744,7 +785,8 @@ public class SiteDeParisMetier {
 
 
 
-	public LinkedList <String> consulterCompetiteurs(String competition) throws CompetitionException, CompetitionInexistanteException{
+	public LinkedList <String> consulterCompetiteurs(String competition)
+            throws CompetitionException, CompetitionInexistanteException{
 
 
 		LinkedList<String> competConsult1;
@@ -779,7 +821,8 @@ public class SiteDeParisMetier {
 	}
 
 
-	protected void validitePasswordGestionnaire(String passwordGestionnaire) throws MetierException {
+	protected void validitePasswordGestionnaire(String passwordGestionnaire)
+            throws MetierException {
 		if (passwordGestionnaire==null) throw new MetierException();
 		if (!passwordGestionnaire.matches("[0-9A-Za-z]{8,}")) throw new MetierException();
 	}
@@ -810,6 +853,14 @@ public class SiteDeParisMetier {
 
 		if (competition==null) throw new CompetitionException();
 		if (!competition.matches("[0-9A-Za-z]{4,}")) throw new CompetitionException();
+
+
+	}
+
+	protected void validiteCompetiteur(String competiteur )throws CompetitionException{
+
+		if (competiteur==null) throw new CompetitionException();
+		if (!competiteur.matches("[0-9A-Za-z]{4,}")) throw new CompetitionException();
 
 
 	}
